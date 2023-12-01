@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import Tweet
 from .forms import AddTweetForm, AddTweetModelForm
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import CreateView
 
 # Create your views here.
 
@@ -13,6 +15,7 @@ def listtweet(request):
     return render(request, 'listweet.html', context)
 
 
+@login_required(login_url='login')
 def addtweet(request):
     if request.method == 'POST':
         nickname = request.POST['nickname']
@@ -61,3 +64,8 @@ def addtweetmodelform(request):
             'form': form
         }
         return render(request, 'addtweetmodelform.html', context)
+
+class Signup(CreateView):
+    form_class = UserCreationForm
+    success_url = reversed('login')
+    template_name = 'registration/signup'

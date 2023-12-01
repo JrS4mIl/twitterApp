@@ -1,12 +1,21 @@
 {% extends "base.html" %}
-
 {% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match.Please try again</p>
 {% if user.is_authenticated %}
+{% endif %}
 <h2>Welcome {{user.username}}</h2>
 {% else %}
     <form action="{% url 'login' %}" method="POST">
         {% csrf_token %}
-    {{form}}
+
+        {% for field in form %}
+              <div class="mb-3">
+                {{field.label_tag}}
+                {{field}}
+              </div>
+        {% endfor %}
     <button type="submit" class="btn btn-primary">Login</button>
     </form>
 {% endif  %}
